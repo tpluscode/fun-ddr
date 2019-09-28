@@ -1,0 +1,9 @@
+node_modules/
+/CHANGELOG.md
+coverage/
+*.js
+!*.config.js
+!*.conf.js
+*.log
+*.d.ts
+*.js.map

@@ -1,0 +1,39 @@
+{
+  "name": "@fun-ddr/sparql-graph-repository",
+  "version": "0.0.0",
+  "description": "Aggregate root repository which stores data in RDF graphs using SPARQL Update",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "precommit": "lint-staged"
+  },
+  "dependencies": {
+    "sparql-http-client": "^1.1.1"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "fuseki": "^1.1.0",
+    "lint-staged": "^9.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tpluscode/fun-ddr.git"
+  },
+  "keywords": [
+    "cqrs",
+    "ddd"
+  ],
+  "author": "Tomasz Pluskiewicz <tomasz@t-code.pl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tpluscode/fun-ddr/issues"
+  },
+  "homepage": "https://github.com/tpluscode/fun-ddr#readme",
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix --quiet",
+      "git add"
+    ]
+  }
+}
