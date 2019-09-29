@@ -4,6 +4,7 @@ import { FactoryFunc } from './factory'
 export interface AggregateRoot<TState extends Entity> {
   state: TState | null;
   version: number;
+  events: DomainEvent[];
 
   mutation<TCommand>(mutator: MutatorFunc<TState, TCommand>): (cmd: TCommand) => AggregateRoot<TState>;
 
@@ -30,7 +31,7 @@ export interface DomainEventEmitter {
 }
 
 export interface Repository<S extends Entity> {
-  save(ar: S, version: number): Promise<void>;
+  save(ar: AggregateRoot<S>, version: number): Promise<void>;
 
   load(id: string): Promise<AggregateRoot<S>>;
 

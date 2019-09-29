@@ -25,15 +25,15 @@ export class SparqlRepository<S extends Entity> implements Repository<S> {
     this.__frame = frame
   }
 
-  public async save (state: S, version: number): Promise<void> {
+  public async save (ar: AggregateRoot<S>, version: number): Promise<void> {
     let graphUri = `urn:ddd:root:${uuid()}`
-    const id = state['@id']
+    const id = ar.state['@id']
     const jsonld = {
       '@context': {
         ...this.__context,
         '@base': this.__base,
       },
-      ...state,
+      ...ar.state,
     }
 
     const selectRootGraph = await this.__sparql.selectQuery(`
