@@ -4,6 +4,8 @@ import { emit } from './events'
 import { AggregateRoot, DomainEvent, DomainEventEmitter, Entity, Repository } from './index'
 
 export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, DomainEventEmitter {
+  private __currentPromise = Promise.resolve()
+
   private __error: Error | null = null
   private __state: T | null = null
   private readonly __id: string = ''
@@ -40,20 +42,23 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
 
   public mutation<TCommand> (mutator: MutatorFunc<T, TCommand>): (cmd: TCommand) => this {
     return (cmd: TCommand) => {
-      if (!this.__error) {
-        try {
-          this.__state = mutator(this.__state, cmd, this)
-        } catch (e) {
-          this.__error = e
-        }
-      }
+      this.__currentPromise = this.__currentPromise
+        .then(async () => {
+          if (!this.__error) {
+            try {
+              this.__state = await mutator(this.__state, cmd, this)
+            } catch (e) {
+              this.__error = e
+            }
+          }
+        })
 
       return this
     }
   }
 
-  public factory<TCommand, TCreated extends Entity> (factoryFunc: FactoryFunc<T, TCommand, TCreated>): (cmd: TCommand) => AggregateRoot<TCreated> {
-    return (cmd: TCommand) => {
+  public factory<TCommand, TCreated extends Entity> (factoryFunc: FactoryFunc<T, TCommand, TCreated>): (cmd: TCommand) => Promise<AggregateRoot<TCreated>> {
+    return async (cmd: TCommand) => {
       if (this.__error) {
         return new AggregateRootImpl<TCreated>(this.__error)
       }
@@ -66,29 +71,51 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
   }
 
   public 'delete' () {
-    this.__markedForDeletion = true
+    this.__currentPromise = this.__currentPromise
+      .then(() => {
+        let types: string[] = []
+        if (this.state) {
+          if (Array.isArray(this.state['@type'])) {
+            types = this.state['@type']
+          } else {
+            types = [this.state['@type']]
+          }
+        }
+
+        this.emit<CoreEvents, 'AggregateDeleted'>('AggregateDeleted', {
+          types,
+        })
+
+        this.__markedForDeletion = true
+      })
+
     return this
   }
 
   public commit (repo: Repository<T>): Promise<T> {
-    if (!this.__state) {
-      return Promise.reject(new Error('Cannot commit null state.'))
-    }
+    return this.__currentPromise.then(() => {
+      if (!this.__state) {
+        throw new Error('Cannot commit null state.')
+      }
 
-    if (!this.__error) {
-      return repo.save(this, this.__previousVersion + 1)
-        .then(() => {
-          if (this.__markedForDeletion) {
-            return repo.delete(this.__id)
-          }
-        })
-        .then(() => {
-          this.__events.forEach(e => emit(e.name, e))
-          return this.__state!
-        })
-    }
+      if (!this.__error) {
+        return repo.save(this, this.__previousVersion + 1)
+          .then(() => {
+            if (this.__markedForDeletion) {
+              return repo.delete(this.__state!['@id'])
+            }
+          })
+          .then(() => {
+            this.__events.forEach(e => emit(e.name, {
+              id: this.__state!['@id'],
+              ...e,
+            }))
+            return this.__state!
+          })
+      }
 
-    return Promise.reject(this.__error)
+      throw this.__error
+    })
   }
 
   public emit<T extends Record<string, unknown>, K extends keyof Pick<T, string>> (name: K, data: T[K]) {

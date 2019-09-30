@@ -8,7 +8,7 @@ export interface AggregateRoot<TState extends Entity> {
 
   mutation<TCommand>(mutator: MutatorFunc<TState, TCommand>): (cmd: TCommand) => AggregateRoot<TState>;
 
-  factory<TCommand, TCreated extends Entity>(factoryFunc: FactoryFunc<TState, TCommand, TCreated>): (cmd: TCommand) => AggregateRoot<TCreated>;
+  factory<TCommand, TCreated extends Entity>(factoryFunc: FactoryFunc<TState, TCommand, TCreated>): (cmd: TCommand) => Promise<AggregateRoot<TCreated>>;
 
   commit(repo: Repository<TState>): Promise<TState>;
 
