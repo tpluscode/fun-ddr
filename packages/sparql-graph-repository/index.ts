@@ -12,7 +12,7 @@ import uuid from 'uuid'
 const parserJsonld = new ParserJsonld()
 const serializerJsonld = new SerializerJsonld()
 
-export class SparqlRepository<S extends Entity> implements Repository<S> {
+export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
   private readonly __sparql: SparqlHttp
   private readonly __base: string
   private readonly __context: object
