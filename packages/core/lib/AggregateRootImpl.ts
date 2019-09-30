@@ -116,7 +116,7 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     })
   }
 
-  public emit<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, data: T[K]) {
+  public emit<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, data: unknown extends T[K] ? never : T[K]) {
     this.__events.push({
       name,
       data,

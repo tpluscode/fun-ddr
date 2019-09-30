@@ -27,7 +27,7 @@ export interface Entity {
 }
 
 export interface DomainEventEmitter {
-  emit<T extends Record<string, any>, K extends keyof Pick<T, string>>(name: K, value: T[K]): void;
+  emit<T extends Record<string, any>, K extends keyof Pick<T, string>>(name: K, value: unknown extends T[K] ? never : T[K]): void;
 }
 
 export interface Repository<S extends Entity> {
