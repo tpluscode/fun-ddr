@@ -1,16 +1,15 @@
 import { MutatorFunc } from './mutation'
 import { FactoryFunc } from './factory'
-import { emit } from './events'
-import { AggregateRoot, DomainEvent, DomainEventEmitter, Entity, Repository } from './index'
+import { CoreEvents, emit } from './events'
+import { AggregateRoot, DomainEventEmitter, Entity, Repository } from './index'
 
 export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, DomainEventEmitter {
   private __currentPromise = Promise.resolve()
 
   private __error: Error | null = null
   private __state: T | null = null
-  private readonly __id: string = ''
   private __markedForDeletion = false
-  private readonly __events: DomainEvent[] = []
+  private readonly __events: { name: string; data: any }[] = []
   private readonly __previousVersion: number = 0
 
   public get state () {
@@ -36,7 +35,6 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
 
       this.__previousVersion = version
       this.__state = state
-      this.__id = state['@id']
     }
   }
 
@@ -118,9 +116,8 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     })
   }
 
-  public emit<T extends Record<string, unknown>, K extends keyof Pick<T, string>> (name: K, data: T[K]) {
+  public emit<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, data: T[K]) {
     this.__events.push({
-      id: this.__id,
       name,
       data,
     })

@@ -4,7 +4,7 @@ import { FactoryFunc } from './factory'
 export interface AggregateRoot<TState extends Entity> {
   state: TState | null;
   version: number;
-  events: DomainEvent[];
+  events: { name: string; data: any }[];
 
   mutation<TCommand>(mutator: MutatorFunc<TState, TCommand>): (cmd: TCommand) => AggregateRoot<TState>;
 
