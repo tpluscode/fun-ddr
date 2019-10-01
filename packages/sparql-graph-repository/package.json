@@ -37,5 +37,8 @@
       "eslint --fix --quiet",
       "git add"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
