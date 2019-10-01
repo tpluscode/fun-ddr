@@ -1,4 +1,5 @@
 export { initialize } from './lib/initialize'
 export { mutate } from './lib/mutation'
 export { factory } from './lib/factory'
-export { handle } from './lib/events'
+export { handle, CoreEvents } from './lib/events'
+export { Entity, Repository } from './lib'
