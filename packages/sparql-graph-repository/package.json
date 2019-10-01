@@ -4,6 +4,7 @@
   "description": "Aggregate root repository which stores aggregates in RDF graphs using SPARQL Update",
   "main": "index.js",
   "scripts": {
+    "prepublishOnly": "tsc",
     "test": "jest",
     "precommit": "lint-staged"
   },
