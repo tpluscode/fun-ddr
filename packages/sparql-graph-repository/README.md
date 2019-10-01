@@ -37,3 +37,15 @@ const frame  = {
 
 export const people = new SparqlGraphRepository<T>(sparqlClient, base, context, frame)
 ```
+
+2. Use it to retrieve and save aggregates
+
+```typescript
+import { people } from './repository/people'
+
+const person = await people.load('...')
+
+person.mutate(changeLastName)({ newName: 'Doe', reason: 'marriage' })
+  .commit(people)
+  .catch(console.error)
+```
