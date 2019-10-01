@@ -6,12 +6,25 @@
     "test": "lerna run test"
   },
   "devDependencies": {
-    "lerna": "^3.14.1",
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@types/jest": "^24.0.18",
+    "@types/jsonld": "^1.5.0",
+    "@types/node": "^12.7.8",
+    "@types/uuid": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
     "cz-lerna-changelog": "^2.0.2",
+    "eslint-plugin-jest": "^22.17.0",
+    "fuseki": "^1.1.0",
     "husky": "^2.4.1",
-    "standard-changelog": "^2.0.11"
+    "jest": "^24.9.0",
+    "lerna": "^3.14.1",
+    "lint-staged": "^9.4.0",
+    "standard": "^14.3.1",
+    "standard-changelog": "^2.0.11",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3"
   },
   "config": {
     "commitizen": {
@@ -28,5 +41,9 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "@fun-ddr/sparql-graph-repository": "file:packages/sparql-graph-repository",
+    "fun-ddr": "file:packages/core"
   }
 }
