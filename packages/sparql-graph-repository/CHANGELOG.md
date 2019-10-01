@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.1.0...@tpluscode/fun-ddr-sparql-graph-repository@0.1.1) (2019-10-01)
+
+
+### Bug Fixes
+
+* update import in sparql repository code ([caad04e](https://github.com/tpluscode/fun-ddr/commit/caad04e))
+
+
+
+
+
 # 0.1.0 (2019-10-01)
 
 
