@@ -1,4 +1,4 @@
-import { Entity, AggregateRoot, Repository } from 'fun-ddr/lib'
+import { Entity, AggregateRoot, Repository } from '@tpluscode/fun-ddr/lib'
 import { AggregateRootImpl } from 'fun-ddr/lib/AggregateRootImpl'
 import SparqlHttp from 'sparql-http-client'
 import ParserJsonld from '@rdfjs/parser-jsonld'
