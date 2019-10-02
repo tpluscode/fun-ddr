@@ -2,9 +2,10 @@ import { MutatorFunc } from './mutation'
 import { FactoryFunc } from './factory'
 
 export interface AggregateRoot<TState extends Entity> {
-  state: TState | null;
+  state: Promise<TState | null>;
+  error: Promise<Error | null>;
   version: number;
-  events: { name: string; data: any }[];
+  events: Promise<{ name: string; data: any }[]>;
 
   mutation<TCommand>(mutator: MutatorFunc<TState, TCommand>): (cmd: TCommand) => AggregateRoot<TState>;
 

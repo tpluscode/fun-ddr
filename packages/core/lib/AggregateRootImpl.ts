@@ -13,7 +13,11 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
   private readonly __previousVersion: number = 0
 
   public get state () {
-    return this.__state
+    return this.__currentPromise.then(() => this.__state)
+  }
+
+  public get error () {
+    return this.__currentPromise.then(() => this.__error)
   }
 
   public get version () {
@@ -21,7 +25,7 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
   }
 
   public get events () {
-    return this.__events
+    return this.__currentPromise.then(() => this.__events)
   }
 
   public constructor (state?: T | Error, version?: number) {
@@ -72,11 +76,11 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     this.__currentPromise = this.__currentPromise
       .then(() => {
         let types: string[] = []
-        if (this.state) {
-          if (Array.isArray(this.state['@type'])) {
-            types = this.state['@type']
+        if (this.__state) {
+          if (Array.isArray(this.__state['@type'])) {
+            types = this.__state['@type']
           } else {
-            types = [this.state['@type']]
+            types = [this.__state['@type']]
           }
         }
 

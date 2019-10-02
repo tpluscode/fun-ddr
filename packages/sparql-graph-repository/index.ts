@@ -27,7 +27,12 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
 
   public async save (ar: AggregateRoot<S>, version: number): Promise<void> {
     let graphUri = `urn:ddd:root:${uuid()}`
-    const id = ar.state['@id']
+    const state = await ar.state
+    if (!state) {
+      throw new Error(`Failed to save aggregate: ${await ar.error}`)
+    }
+
+    const id = state['@id']
     const jsonld = {
       '@context': {
         ...this.__context,
@@ -133,7 +138,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       return new AggregateRootImpl<S>(state, Number.parseInt(version))
     }
 
-    return new AggregateRootImpl<S>(new Error('Resoruce not found or deleted'))
+    return new AggregateRootImpl<S>(new Error('Resource not found or deleted'))
   }
 
   public 'delete' (id: string): Promise<any> {
