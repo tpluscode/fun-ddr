@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.1.0...@tpluscode/fun-ddr@0.1.1) (2019-10-02)
+
+
+### Bug Fixes
+
+* make aggregate root async to wait for modifications to finish ([7634cc9](https://github.com/tpluscode/fun-ddr/commit/7634cc9))
+* throw aggregate error before null state error ([e342878](https://github.com/tpluscode/fun-ddr/commit/e342878))
+
+
+
+
+
 # 0.1.0 (2019-10-01)
 
 
