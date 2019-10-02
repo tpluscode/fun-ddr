@@ -96,27 +96,27 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
 
   public commit (repo: Repository<T>): Promise<T> {
     return this.__currentPromise.then(() => {
+      if (this.__error) {
+        throw this.__error
+      }
+
       if (!this.__state) {
         throw new Error('Cannot commit null state.')
       }
 
-      if (!this.__error) {
-        return repo.save(this, this.__previousVersion + 1)
-          .then(() => {
-            if (this.__markedForDeletion) {
-              return repo.delete(this.__state!['@id'])
-            }
-          })
-          .then(() => {
-            this.__events.forEach(e => emit(e.name, {
-              id: this.__state!['@id'],
-              ...e,
-            }))
-            return this.__state!
-          })
-      }
-
-      throw this.__error
+      return repo.save(this, this.__previousVersion + 1)
+        .then(() => {
+          if (this.__markedForDeletion) {
+            return repo.delete(this.__state!['@id'])
+          }
+        })
+        .then(() => {
+          this.__events.forEach(e => emit(e.name, {
+            id: this.__state!['@id'],
+            ...e,
+          }))
+          return this.__state!
+        })
     })
   }
 
