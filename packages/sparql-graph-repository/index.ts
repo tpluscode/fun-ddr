@@ -38,7 +38,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
         ...this.__context,
         '@base': this.__base,
       },
-      ...ar.state,
+      ...state,
     }
 
     const selectRootGraph = await this.__sparql.selectQuery(`
