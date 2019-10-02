@@ -56,15 +56,15 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     const json = (await selectRootGraph.json())
 
     if (json.results.bindings.length > 1) {
-      throw new Error(`Failed to save aggregate root: Found multiple graphs: ${json.results.bindings.map(b => b.graph.value).join(', ')}`)
+      throw new Error(`Failed to save aggregate: Found multiple graphs: ${json.results.bindings.map(b => b.graph.value).join(', ')}`)
     } else if (json.results.bindings.length > 0) {
       const [{ graph, currentVersion }] = json.results.bindings
       if (!currentVersion) {
         if (version > 1) {
-          throw new Error(`Failed to save aggregate root: It does not exist but attempting to save version ${version}`)
+          throw new Error(`Failed to save aggregate: It does not exist but attempting to save version ${version}`)
         }
       } else if (currentVersion && version !== Number.parseInt(currentVersion.value) + 1) {
-        throw new Error(`Failed to save aggregate root: It has already been modified ${version}`)
+        throw new Error(`Failed to save aggregate: It has already been modified ${version}`)
       }
 
       graphUri = graph.value
@@ -122,7 +122,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       })
     })
 
-    const jsonld = await frame(jsonldArray, {
+    const jsonld: any = await frame(jsonldArray, {
       '@context': {
         ...this.__context,
         '@base': this.__base,

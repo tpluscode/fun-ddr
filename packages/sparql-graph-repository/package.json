@@ -19,6 +19,9 @@
     "string-to-stream": "^3.0.1",
     "uuid": "^3.3.3"
   },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tpluscode/fun-ddr.git"
