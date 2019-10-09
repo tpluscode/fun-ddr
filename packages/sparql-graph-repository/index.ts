@@ -138,7 +138,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       return new AggregateRootImpl<S>(state, Number.parseInt(version))
     }
 
-    return new AggregateRootImpl<S>(new Error('Resource not found or deleted'))
+    return new AggregateRootImpl<S>(new Error(`Resource ${id} not found or deleted`))
   }
 
   public 'delete' (id: string): Promise<any> {
