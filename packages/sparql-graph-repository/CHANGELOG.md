@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.1.3...@tpluscode/fun-ddr-sparql-graph-repository@0.1.4) (2019-10-09)
+
+
+### Bug Fixes
+
+* include the id when an aggregate is not found ([0765177](https://github.com/tpluscode/fun-ddr/commit/0765177))
+* repository stores empty graph because it spreads wrong object ([7ecf8e4](https://github.com/tpluscode/fun-ddr/commit/7ecf8e4))
+
+
+
+
+
 ## [0.1.3](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.1.2...@tpluscode/fun-ddr-sparql-graph-repository@0.1.3) (2019-10-02)
 
 

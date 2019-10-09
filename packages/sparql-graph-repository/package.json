@@ -1,6 +1,6 @@
 {
   "name": "@tpluscode/fun-ddr-sparql-graph-repository",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Aggregate root repository which stores aggregates in RDF graphs using SPARQL Update",
   "main": "index.js",
   "scripts": {
