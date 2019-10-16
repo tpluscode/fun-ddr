@@ -9,9 +9,17 @@ export interface CoreEvents {
   };
 }
 
-export function handle<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, handler: (ev: unknown extends T[K] ? never : DomainEvent<T[K]>) => void) {
+type PossiblyDomainEvent<T extends Record<string, any>, K extends keyof Pick<T, string>> = unknown extends T[K] ? never : DomainEvent<T[K]>
+
+export function handle<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, handler: (ev: PossiblyDomainEvent<T, K>) => void) {
   console.log(`Adding handler for event ${name}: ${handler.name}`)
   emitter.on(name, handler)
+
+  return (id: string, data: T[K]) => handler({
+    id,
+    data,
+    name,
+  } as any as PossiblyDomainEvent<T, K>)
 }
 
 export function emit (name: string, ev: DomainEvent) {
