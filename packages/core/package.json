@@ -1,6 +1,6 @@
 {
   "name": "@tpluscode/fun-ddr",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Functional and unimposing foundation for architecture resembling CQRS; could be useful for DDD",
   "main": "index.js",
   "scripts": {
