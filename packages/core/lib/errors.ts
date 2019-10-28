@@ -12,7 +12,7 @@ export class AggregateNotFoundError extends Error {
  * because it had been saved already by another process
  */
 export class ConcurrencyError extends Error {
-  private readonly reason: string
+  public readonly reason: string
   public constructor (id: string, currentVersion: number, desiredVersion: number) {
     super(`Cannot save aggregate ${id}. It has already been modified`)
 
@@ -25,8 +25,8 @@ export class ConcurrencyError extends Error {
  * either due to do it being incomplete or attempting to put the aggregate in an illegal state
  */
 export class DomainError extends Error {
-  private readonly title: string
-  private readonly reason: string
+  public readonly title: string
+  public readonly reason: string
   public constructor (id: string, title: string, reason: string) {
     super(`Cannot modify aggregate ${id} into an invalid state`)
 
