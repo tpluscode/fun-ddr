@@ -112,7 +112,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       MINUS {
         ?root <urn:ddd:deleted> [] .
       }
-    }`)
+    }`) as any
 
     const stream = await serializerJsonld.import(await graph.quadStream())
 
