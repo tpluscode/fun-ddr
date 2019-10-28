@@ -1,33 +1,44 @@
-declare module 'sparql-http-client' {
-  import { Term } from 'rdf-js'
-  import { Response } from 'node-fetch'
+import { Term } from 'rdf-js'
+import { URL } from 'url'
 
-  interface SparqlHttpOptions {
-    endpointUrl: string;
-    updateUrl: string;
-    fetch: any;
+declare namespace SparqlHttp {
+
+  export interface SparqlHttpOptions {
+    endpointUrl?: string;
+    updateUrl?: string;
   }
 
-  interface SelectBindings {
-    results: { bindings: Record<string, Term>[] };
+  export interface SparqlClientOptions extends SparqlHttpOptions {
+    // eslint-disable-next-line no-undef
+    fetch?: typeof fetch;
+    URL?: typeof URL;
   }
 
-  interface AskResult {
+  export interface QueryRequestInit extends SparqlHttpOptions, RequestInit {
+  }
+
+  export interface SelectBindings {
+    results: { bindings: readonly Record<string, Term>[] };
+  }
+
+  export interface AskResult {
     boolean: boolean;
   }
 
-  interface SelectResponse extends Response {
+  export interface SelectResponse {
     json(): Promise<SelectBindings & AskResult>;
   }
-
-  interface ConstructResponse extends Response {
-    quadStream(): Promise<any>;
-  }
-
-  export default class SparqlHttp {
-    public constructor (options: SparqlHttpOptions);
-    public updateQuery(query: string, options?: unknown): Promise<Response>;
-    public selectQuery(query: string, options?: unknown): Promise<SelectResponse>;
-    public constructQuery(query: string, options?: unknown): Promise<ConstructResponse>;
-  }
 }
+
+// eslint-disable-next-line no-redeclare
+declare class SparqlHttp<TResponse extends Response = Response> {
+  public constructor(options?: SparqlHttp.SparqlClientOptions);
+
+  public updateQuery(query: string, options?: SparqlHttp.QueryRequestInit): Promise<Response>;
+
+  public selectQuery(query: string, options?: SparqlHttp.QueryRequestInit): Promise<SparqlHttp.SelectResponse & TResponse>;
+
+  public constructQuery(query: string, options?: SparqlHttp.QueryRequestInit): Promise<TResponse>;
+}
+
+export = SparqlHttp;
