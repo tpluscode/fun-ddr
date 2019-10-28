@@ -8,6 +8,7 @@ import stringToStream from 'string-to-stream'
 import rdf from 'rdf-ext'
 import { expand } from '@zazuko/rdf-vocabularies'
 import uuid from 'uuid'
+import { AggregateNotFoundError, ConcurrencyError } from '@tpluscode/fun-ddr/lib/errors'
 
 const parserJsonld = new ParserJsonld()
 const serializerJsonld = new SerializerJsonld()
@@ -61,10 +62,13 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       const [{ graph, currentVersion }] = json.results.bindings
       if (!currentVersion) {
         if (version > 1) {
-          throw new Error(`Failed to save aggregate: It does not exist but attempting to save version ${version}`)
+          throw new ConcurrencyError(id, 0, version)
         }
-      } else if (currentVersion && version !== Number.parseInt(currentVersion.value) + 1) {
-        throw new Error(`Failed to save aggregate: It has already been modified ${version}`)
+      } else {
+        const currentVersionNumber = Number.parseInt(currentVersion.value)
+        if (version !== currentVersionNumber + 1) {
+          throw new ConcurrencyError(id, currentVersionNumber, version)
+        }
       }
 
       graphUri = graph.value
@@ -138,7 +142,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       return new AggregateRootImpl<S>(state, Number.parseInt(version))
     }
 
-    return new AggregateRootImpl<S>(new Error(`Resource ${id} not found or deleted`))
+    return new AggregateRootImpl<S>(new AggregateNotFoundError(id))
   }
 
   public 'delete' (id: string): Promise<any> {
