@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@rdfjs/parser-jsonld": "^1.1.2",
-    "@rdfjs/serializer-jsonld": "^1.2.1",
     "@tpluscode/fun-ddr": "^0.3.1",
     "@zazuko/rdf-vocabularies": "^2019.9.24",
     "jsonld": "^1.8.0",

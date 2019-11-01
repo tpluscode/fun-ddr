@@ -2,16 +2,15 @@ import { Entity, AggregateRoot, Repository } from '@tpluscode/fun-ddr/lib'
 import { AggregateRootImpl } from '@tpluscode/fun-ddr/lib/AggregateRootImpl'
 import SparqlHttp from 'sparql-http-client'
 import ParserJsonld from '@rdfjs/parser-jsonld'
-import SerializerJsonld from '@rdfjs/serializer-jsonld'
-import { frame } from 'jsonld'
+import { frame, fromRDF } from 'jsonld'
 import stringToStream from 'string-to-stream'
 import rdf from 'rdf-ext'
 import { expand } from '@zazuko/rdf-vocabularies'
 import uuid from 'uuid'
 import { AggregateNotFoundError, ConcurrencyError } from '@tpluscode/fun-ddr/lib/errors'
+import { JsonLdArray } from 'jsonld/jsonld-spec'
 
 const parserJsonld = new ParserJsonld()
-const serializerJsonld = new SerializerJsonld()
 
 export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
   private readonly __sparql: SparqlHttp
@@ -118,13 +117,8 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       }
     }`) as any
 
-    const stream = await serializerJsonld.import(await graph.quadStream())
-
-    const jsonldArray: any[] = await new Promise((resolve) => {
-      stream.on('data', (jsonld: any) => {
-        resolve(jsonld)
-      })
-    })
+    const dataset = await rdf.dataset().import(await graph.quadStream())
+    const jsonldArray: any[] = await fromRDF(dataset.toString()) as JsonLdArray
 
     const jsonld: any = await frame(jsonldArray, {
       '@context': {
@@ -138,7 +132,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     const state = jsonld['@graph'][0]
 
     if (state) {
-      const version = jsonldArray.find(obj => obj['urn:ddd:version'])['urn:ddd:version']['@value']
+      const version = jsonldArray.find(obj => obj['urn:ddd:version'])['urn:ddd:version'][0]['@value']
       return new AggregateRootImpl<S>(state, Number.parseInt(version))
     }
 
