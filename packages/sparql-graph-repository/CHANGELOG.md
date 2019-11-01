@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.1...@tpluscode/fun-ddr-sparql-graph-repository@0.2.2) (2019-11-01)
+
+
+### Bug Fixes
+
+* correctly deserialize rdf:List ([0c73709](https://github.com/tpluscode/fun-ddr/commit/0c73709))
+
+
+
+
+
 ## [0.2.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.0...@tpluscode/fun-ddr-sparql-graph-repository@0.2.1) (2019-10-28)
 
 **Note:** Version bump only for package @tpluscode/fun-ddr-sparql-graph-repository
