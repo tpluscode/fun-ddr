@@ -8,6 +8,9 @@
     "test": "jest",
     "precommit": "lint-staged"
   },
+  "dependencies": {
+    "eventemitter3": "^4.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.8",
