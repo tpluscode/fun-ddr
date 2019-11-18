@@ -9,9 +9,11 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "debug": "^4.1.1",
     "eventemitter3": "^4.0.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.1",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.8",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
