@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.3.1...@tpluscode/fun-ddr@0.4.0) (2019-11-18)
+
+
+### Bug Fixes
+
+* eventemitter should be a dependency ([aa348ee](https://github.com/tpluscode/fun-ddr/commit/aa348ee))
+
+
+### Features
+
+* use debug for logging event handlers ([c616be9](https://github.com/tpluscode/fun-ddr/commit/c616be9))
+
+
+
+
+
 ## [0.3.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.3.0...@tpluscode/fun-ddr@0.3.1) (2019-10-28)
 
 
