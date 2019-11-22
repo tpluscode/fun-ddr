@@ -53,6 +53,9 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
           ?graph <urn:ddd:deleted> [] .
         }
       }`)
+    if (!selectRootGraph.ok) {
+      throw new Error(`Failed to read aggregate root: '${selectRootGraph.statusText}'`)
+    }
     const json = (await selectRootGraph.json())
 
     if (json.results.bindings.length > 1) {
@@ -117,6 +120,10 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       }
     }`) as any
 
+    if (!graph.ok) {
+      throw new Error(`Failed to load aggregate root: '${graph.statusText}'`)
+    }
+
     const dataset = await rdf.dataset().import(await graph.quadStream())
     const jsonldArray: any[] = await fromRDF(dataset.toString()) as JsonLdArray
 
@@ -139,8 +146,8 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     return new AggregateRootImpl<S>(new AggregateNotFoundError(id))
   }
 
-  public 'delete' (id: string): Promise<any> {
-    return this.__sparql.updateQuery(`
+  public async 'delete' (id: string): Promise<void> {
+    const response = await this.__sparql.updateQuery(`
       BASE <${this.__base}>
       
       DELETE { 
@@ -157,5 +164,9 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
         }
       }
     `)
+
+    if (!response.ok) {
+      throw new Error(`Failed to load aggregate root: '${response.statusText}'`)
+    }
   }
 }
