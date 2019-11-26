@@ -103,6 +103,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
         <${graphUri}> <urn:ddd:version> ?version .
       };
       
+      BASE <${this.__base}>
       INSERT DATA
       {
         GRAPH <${graphUri}> {
