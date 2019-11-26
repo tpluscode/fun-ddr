@@ -12,6 +12,7 @@
     "@rdfjs/parser-jsonld": "^1.1.2",
     "@tpluscode/fun-ddr": "^0.4.0",
     "@zazuko/rdf-vocabularies": "^2019.9.24",
+    "debug": "^4.1.1",
     "jsonld": "^1.8.0",
     "rdf-ext": "^1.3.0",
     "sparql-http-client": "^1.1.1",
@@ -19,6 +20,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.5",
     "@types/sparql-http-client": "^1.1.1",
     "typescript": "^3.7.2"
   },
