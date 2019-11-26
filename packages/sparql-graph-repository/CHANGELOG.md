@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.5...@tpluscode/fun-ddr-sparql-graph-repository@0.2.6) (2019-11-26)
+
+
+### Bug Fixes
+
+* **stardog:** base URI must be repeated in multiple update queries ([1c9b3ce](https://github.com/tpluscode/fun-ddr/commit/1c9b3ce))
+* **stardog:** remove leading whitespace from queries to prevent errors ([ecb2eca](https://github.com/tpluscode/fun-ddr/commit/ecb2eca))
+
+
+
+
+
 ## [0.2.5](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.4...@tpluscode/fun-ddr-sparql-graph-repository@0.2.5) (2019-11-26)
 
 
