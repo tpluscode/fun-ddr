@@ -41,8 +41,8 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       ...state,
     }
 
-    const selectRootGraph = await this.__sparql.selectQuery(`
-      BASE <${this.__base}>
+    const selectRootGraph = await this.__sparql.selectQuery(
+      `BASE <${this.__base}>
       
       SELECT ?graph ?currentVersion
       WHERE { 
@@ -78,8 +78,8 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
 
     const parsed = await rdf.dataset().import(parserJsonld.import(stringToStream(JSON.stringify(jsonld))))
 
-    const response = await this.__sparql.updateQuery(`
-      BASE <${this.__base}>
+    const response = await this.__sparql.updateQuery(
+      `BASE <${this.__base}>
 
       DELETE WHERE
       {
@@ -103,8 +103,8 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
   }
 
   public async load (id: string): Promise<AggregateRoot<S>> {
-    const graph = await this.__sparql.constructQuery(`
-    BASE <${this.__base}>
+    const graph = await this.__sparql.constructQuery(
+      `BASE <${this.__base}>
     
     CONSTRUCT { 
       ?s ?p ?o .
@@ -147,8 +147,8 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
   }
 
   public async 'delete' (id: string): Promise<void> {
-    const response = await this.__sparql.updateQuery(`
-      BASE <${this.__base}>
+    const response = await this.__sparql.updateQuery(
+      `BASE <${this.__base}>
       
       DELETE { 
         ?root <urn:ddd:deleted> ?isDeleted .
