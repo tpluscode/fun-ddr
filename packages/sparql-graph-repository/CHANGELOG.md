@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.4...@tpluscode/fun-ddr-sparql-graph-repository@0.2.5) (2019-11-26)
+
+
+### Bug Fixes
+
+* throw errors on failed SPARQL queries ([5620e41](https://github.com/tpluscode/fun-ddr/commit/5620e41))
+
+
+
+
+
 ## [0.2.4](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.3...@tpluscode/fun-ddr-sparql-graph-repository@0.2.4) (2019-11-18)
 
 **Note:** Version bump only for package @tpluscode/fun-ddr-sparql-graph-repository
