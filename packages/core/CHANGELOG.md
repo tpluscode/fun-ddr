@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.4.0...@tpluscode/fun-ddr@0.5.0) (2019-11-29)
+
+
+### Features
+
+* add a function to directly emit any domain event ([3cae699](https://github.com/tpluscode/fun-ddr/commit/3cae699))
+
+
+
+
+
 # [0.4.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.3.1...@tpluscode/fun-ddr@0.4.0) (2019-11-18)
 
 
