@@ -41,3 +41,11 @@ export function emit (name: string, ev: DomainEvent) {
   logger(`Emitting event ${ev.name} for resource ${ev.id}`)
   emitter.emit(name, ev)
 }
+
+export function emitImmediate<T extends Record<string, any>, K extends keyof Pick<T, string>> (id: string, name: K, data: unknown extends T[K] ? never : T[K]) {
+  emit(name, {
+    id,
+    name,
+    data,
+  })
+}
