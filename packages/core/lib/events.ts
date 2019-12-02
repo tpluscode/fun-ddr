@@ -15,12 +15,10 @@ type Handler<T extends Record<string, any>, K extends keyof Pick<T, string>> = (
 
 async function runHandler (handler: (ev: any) => void | Promise<void>, ev: any) {
   const handlerLog = logger.extend(ev.name)
-  handlerLog(`Handling started for ${ev.id}`)
+  handlerLog(`Calling handler ${handler.name || 'anonymous'}(${ev.id})`)
 
   try {
-    const result = await handler(ev)
-    handlerLog('Handling finished')
-    return result
+    return await handler(ev)
   } catch (e) {
     handlerLog.extend('error')('Error in handler %O', e)
   }
