@@ -9,8 +9,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "eventemitter3": "^4.0.0"
+    "debug": "^4.1.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",

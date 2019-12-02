@@ -94,30 +94,28 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     return this
   }
 
-  public commit (repo: Repository<T>): Promise<T> {
-    return this.__currentPromise.then(() => {
-      if (this.__error) {
-        throw this.__error
-      }
+  public async commit (repo: Repository<T>): Promise<T> {
+    await this.__currentPromise
+    if (this.__error) {
+      throw this.__error
+    }
 
-      if (!this.__state) {
-        throw new Error('Cannot commit null state.')
-      }
+    if (!this.__state) {
+      throw new Error('Cannot commit null state.')
+    }
 
-      return repo.save(this, this.__previousVersion + 1)
-        .then(() => {
-          if (this.__markedForDeletion) {
-            return repo.delete(this.__state!['@id'])
-          }
-        })
-        .then(() => {
-          this.__events.forEach(e => emit(e.name, {
-            id: this.__state!['@id'],
-            ...e,
-          }))
-          return this.__state!
-        })
-    })
+    await repo.save(this, this.__previousVersion + 1)
+
+    if (this.__markedForDeletion) {
+      await repo.delete(this.__state!['@id'])
+    }
+
+    await Promise.all(this.__events.map(e => emit(e.name, {
+      id: this.__state!['@id'],
+      ...e,
+    })))
+
+    return this.__state!
   }
 
   public emit<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, data: unknown extends T[K] ? never : T[K]) {
