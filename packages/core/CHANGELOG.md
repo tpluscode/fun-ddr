@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.5.0...@tpluscode/fun-ddr@0.5.1) (2019-12-03)
+
+
+### Bug Fixes
+
+* make event emitting awaitable ([b1dc3e8](https://github.com/tpluscode/fun-ddr/commit/b1dc3e8))
+
+
+
+
+
 # [0.5.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.4.0...@tpluscode/fun-ddr@0.5.0) (2019-11-29)
 
 
