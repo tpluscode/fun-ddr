@@ -94,7 +94,7 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     return this
   }
 
-  public async commit (repo: Repository<T>): Promise<T> {
+  async commit<TActual extends Entity> (repo: T extends TActual ? Repository<T> : never): Promise<T> {
     await this.__currentPromise
     if (this.__error) {
       throw this.__error
@@ -104,7 +104,7 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
       throw new Error('Cannot commit null state.')
     }
 
-    await repo.save(this, this.__previousVersion + 1)
+    await repo.save(this as any, this.__previousVersion + 1)
 
     if (this.__markedForDeletion) {
       await repo.delete(this.__state!['@id'])
