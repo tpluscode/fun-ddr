@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.5.1...@tpluscode/fun-ddr@0.5.2) (2019-12-06)
+
+
+### Bug Fixes
+
+* type aggregate root to allow saving to repo of base type ([f83f7b1](https://github.com/tpluscode/fun-ddr/commit/f83f7b1))
+
+
+
+
+
 ## [0.5.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.5.0...@tpluscode/fun-ddr@0.5.1) (2019-12-03)
 
 
