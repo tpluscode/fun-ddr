@@ -10,6 +10,7 @@ import { expand } from '@zazuko/rdf-vocabularies'
 import uuid from 'uuid'
 import { AggregateNotFoundError, ConcurrencyError } from '@tpluscode/fun-ddr/lib/errors'
 import { JsonLdArray } from 'jsonld/jsonld-spec'
+import {Stream} from 'stream';
 
 const log = debug('fun-ddr:repository')
 const logError = log.extend('error')
@@ -92,7 +93,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       graphUri = graph.value
     }
 
-    const parsed = await rdf.dataset().import(parserJsonld.import(stringToStream(JSON.stringify(jsonld))))
+    const parsed = await rdf.dataset().import(parserJsonld.import(stringToStream(JSON.stringify(jsonld)) as any))
 
     const response = await this.__sparql.updateQuery(
       `BASE <${this.__base}>
