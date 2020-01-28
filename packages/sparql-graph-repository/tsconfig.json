@@ -4,11 +4,13 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": [
-      "esnext"
+      "esnext",
+      "webworker"
     ],
-    "strict": false,
+    "strict": true,
     "declaration": true,
     "sourceMap": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots" : ["./typings", "./node_modules/@types"]
   }
 }

@@ -7,3 +7,4 @@ coverage/
 *.log
 *.d.ts
 *.js.map
+!**/typings/**/*.d.ts

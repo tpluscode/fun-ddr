@@ -11,7 +11,7 @@ export interface AggregateRoot<TState extends Entity> {
 
   factory<TCommand, TCreated extends Entity>(factoryFunc: FactoryFunc<TState, TCommand, TCreated>): (cmd: TCommand) => Promise<AggregateRoot<TCreated>>;
 
-  commit(repo: Repository<TState>): Promise<TState>;
+  commit<T extends Entity>(repo: TState extends T ? Repository<T> : never): Promise<TState>;
 
   'delete'(): AggregateRoot<TState>;
 }

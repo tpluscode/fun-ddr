@@ -1,0 +1,4 @@
+**/*.ts
+jest.config.js
+*.json
+!**/*.d.ts
