@@ -19,7 +19,7 @@
     "fuseki": "^1.1.0",
     "husky": "^2.4.1",
     "jest": "^24.9.0",
-    "lerna": "^3.14.1",
+    "lerna": "^3.20.2",
     "lint-staged": "^9.4.0",
     "standard": "^14.3.1",
     "standard-changelog": "^2.0.11",
