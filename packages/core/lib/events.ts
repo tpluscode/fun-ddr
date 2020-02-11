@@ -10,8 +10,7 @@ export interface CoreEvents {
   };
 }
 
-type PossiblyDomainEvent<T extends Record<string, any>, K extends keyof Pick<T, string>> = unknown extends T[K] ? never : DomainEvent<T[K]>
-type Handler<T extends Record<string, any>, K extends keyof Pick<T, string>> = (ev: PossiblyDomainEvent<T, K>) => void | Promise<any>
+type Handler<T> = (ev: DomainEvent<T>) => void | Promise<any>
 
 async function runHandler (handler: (ev: any) => void | Promise<void>, ev: any) {
   const handlerLog = logger.extend(ev.name)
@@ -33,19 +32,33 @@ async function handlersAndChildren (name: string, promises: Promise<Promise<unkn
   }
 }
 
-export function handle<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, handler: Handler<T, K>) {
-  logger(`Adding handler for event ${name}: ${handler.name}`)
+type HandlerMap<T extends Record<string, any>> = {
+  readonly [P in keyof T]: (handler: Handler<T[P]>) => (id: string, data: T[P]) => void | Promise<any>;
+}
 
-  const handlersOfEvent = handlers.get(name) || []
+export function handler<T extends Record<string, any>> (): { on: HandlerMap<T> } {
+  return {
+    on: new Proxy({}, {
+      get (target: {}, p: string | number | symbol): any {
+        return (handler: any) => {
+          const name = p.toString()
 
-  handlersOfEvent.push(handler)
-  handlers.set(name, handlersOfEvent)
+          logger(`Adding handler for event ${name}: ${handler.name}`)
 
-  return (id: string, data: T[K]) => handler({
-    id,
-    data,
-    name,
-  } as any as PossiblyDomainEvent<T, K>)
+          const handlersOfEvent = handlers.get(name) || []
+
+          handlersOfEvent.push(handler)
+          handlers.set(name, handlersOfEvent)
+
+          return (id: string, data: unknown) => handler({
+            id,
+            data,
+            name,
+          })
+        }
+      },
+    }) as any,
+  }
 }
 
 export function emit (name: string, ev: DomainEvent<any>) {
