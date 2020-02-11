@@ -32,7 +32,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     this.__frame = frame
   }
 
-  public async save (ar: AggregateRoot<S>, version: number): Promise<void> {
+  public async save (ar: AggregateRoot<S, any>, version: number): Promise<void> {
     let graphUri = `urn:ddd:root:${uuid()}`
     const state = await ar.state
     if (!state) {
@@ -123,7 +123,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     log('Aggregate root saved')
   }
 
-  public async load (id: string): Promise<AggregateRoot<S>> {
+  public async load (id: string): Promise<AggregateRoot<S, any>> {
     log('Loading aggregate root %s', id)
     const graph = await this.__sparql.constructQuery(
       `BASE <${this.__base}>
@@ -165,11 +165,11 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     if (state) {
       const version = jsonldArray.find(obj => obj['urn:ddd:version'])['urn:ddd:version'][0]['@value']
       log('Loaded version %d of aggregate %s', version, id)
-      return new AggregateRootImpl<S>(state, Number.parseInt(version))
+      return new AggregateRootImpl<S, any>(state, Number.parseInt(version))
     }
 
     logError('Failed to load aggregate root. Failed to retrieve state object from graph %s', jsonld)
-    return new AggregateRootImpl<S>(new AggregateNotFoundError(id))
+    return new AggregateRootImpl<S, any>(new AggregateNotFoundError(id))
   }
 
   public async 'delete' (id: string): Promise<void> {

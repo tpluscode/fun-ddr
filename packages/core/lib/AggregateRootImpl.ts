@@ -3,7 +3,7 @@ import { FactoryFunc } from './factory'
 import { CoreEvents, emit } from './events'
 import { AggregateRoot, DomainEventEmitter, Entity, Repository } from './index'
 
-export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, DomainEventEmitter {
+export class AggregateRootImpl<T extends Entity, TEvents extends Record<string, any>> implements AggregateRoot<T, TEvents>, DomainEventEmitter<TEvents> {
   private __currentPromise = Promise.resolve()
 
   private __error: Error | null = null
@@ -42,7 +42,7 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     }
   }
 
-  public mutation<TCommand> (mutator: MutatorFunc<T, TCommand>): (cmd: TCommand) => this {
+  public mutation<TCommand> (mutator: MutatorFunc<T, TCommand, TEvents>): (cmd: TCommand) => this {
     return (cmd: TCommand) => {
       this.__currentPromise = this.__currentPromise
         .then(async () => {
@@ -59,15 +59,15 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     }
   }
 
-  public factory<TCommand, TCreated extends Entity> (factoryFunc: FactoryFunc<T, TCommand, TCreated>): (cmd: TCommand) => Promise<AggregateRoot<TCreated>> {
+  public factory<TCommand, TCreated extends Entity> (factoryFunc: FactoryFunc<T, TCommand, TCreated, TEvents>): (cmd: TCommand) => Promise<AggregateRoot<TCreated, TEvents>> {
     return async (cmd: TCommand) => {
       if (this.__error) {
-        return new AggregateRootImpl<TCreated>(this.__error)
+        return new AggregateRootImpl<TCreated, TEvents>(this.__error)
       }
       try {
         return factoryFunc(this.__state, cmd)
       } catch (e) {
-        return new AggregateRootImpl<TCreated>(e)
+        return new AggregateRootImpl<TCreated, TEvents>(e)
       }
     }
   }
@@ -84,7 +84,7 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
           }
         }
 
-        this.emit<CoreEvents, 'AggregateDeleted'>('AggregateDeleted', {
+        this.emitFrom<CoreEvents>().AggregateDeleted({
           types,
         })
 
@@ -118,10 +118,18 @@ export class AggregateRootImpl<T extends Entity> implements AggregateRoot<T>, Do
     return this.__state!
   }
 
-  public emit<T extends Record<string, any>, K extends keyof Pick<T, string>> (name: K, data: unknown extends T[K] ? never : T[K]) {
-    this.__events.push({
-      name,
-      data,
+  public get emit (): any {
+    return new Proxy(this, {
+      get (target: AggregateRootImpl<T, TEvents>, p: string | number | symbol): any {
+        return (data: any) => target.__events.push({
+          name: p.toString(),
+          data,
+        })
+      },
     })
+  }
+
+  public emitFrom<T extends Record<string, any>> () {
+    return this.emit
   }
 }
