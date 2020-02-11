@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.10...@tpluscode/fun-ddr-sparql-graph-repository@0.3.0) (2020-02-11)
+
+
+### Bug Fixes
+
+* simple API so emit events ([e5d2198](https://github.com/tpluscode/fun-ddr/commit/e5d2198f64facff90b133c90d20c639cbff3bbb8))
+* typo in error msg ([15a678f](https://github.com/tpluscode/fun-ddr/commit/15a678f259f91632ce0728123628837a0d0bc705))
+
+
+### BREAKING CHANGES
+
+* generic parameters changed on the domain methods
+
+
+
+
+
 ## [0.2.10](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.2.9...@tpluscode/fun-ddr-sparql-graph-repository@0.2.10) (2020-01-07)
 
 **Note:** Version bump only for package @tpluscode/fun-ddr-sparql-graph-repository
