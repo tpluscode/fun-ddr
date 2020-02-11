@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.6.0...@tpluscode/fun-ddr@0.6.1) (2020-02-11)
+
+
+### Features
+
+* make the usage of event handlers more developer friendly ([b291f69](https://github.com/tpluscode/fun-ddr/commit/b291f690fae12a7696bda738dd6b30fa6cc4e697))
+
+
+### BREAKING CHANGES
+
+* handler API changed
+
+
+
+
+
 # [0.6.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr@0.5.3...@tpluscode/fun-ddr@0.6.0) (2020-02-11)
 
 
