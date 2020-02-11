@@ -4,7 +4,7 @@
   "description": "Functional and unimposing foundation for architecture resembling CQRS; could be useful for DDD",
   "main": "index.js",
   "scripts": {
-    "prepublishOnly": "tsc",
+    "prepare": "tsc",
     "test": "jest",
     "precommit": "lint-staged"
   },
