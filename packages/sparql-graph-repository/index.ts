@@ -148,7 +148,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
     }
 
     const dataset = await rdf.dataset(graph)
-    const jsonldArray: any[] = await fromRDF(JSON.parse(dataset.toString())) as JsonLdArray
+    const jsonldArray: any[] = await fromRDF(dataset.toString() as any) as JsonLdArray
 
     const jsonld: any = await frame(jsonldArray, {
       '@context': {
