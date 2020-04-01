@@ -1,6 +1,8 @@
 import { Entity, AggregateRoot, Repository } from '@tpluscode/fun-ddr/lib'
 import { AggregateRootImpl } from '@tpluscode/fun-ddr/lib/AggregateRootImpl'
-import SparqlHttp from 'sparql-http-client'
+import ParsingClient from 'sparql-http-client/ParsingClient'
+import { ParsingQuery } from 'sparql-http-client/ParsingQuery'
+import { ResultRow } from 'sparql-http-client/ResultParser'
 import debug from 'debug'
 import ParserJsonld from '@rdfjs/parser-jsonld'
 import { frame, fromRDF } from 'jsonld'
@@ -10,23 +12,23 @@ import { expand } from '@zazuko/rdf-vocabularies'
 import uuid from 'uuid'
 import { AggregateNotFoundError, ConcurrencyError } from '@tpluscode/fun-ddr/lib/errors'
 import { JsonLdArray } from 'jsonld/jsonld-spec'
+import { Quad } from 'rdf-js'
 
 const log = debug('fun-ddr:repository')
 const logError = log.extend('error')
-const logResponse = log.extend('endpoint')
 const parserJsonld = new ParserJsonld()
 
 export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
-  private readonly __sparql: SparqlHttp
+  private readonly __sparql: ParsingQuery
   private readonly __base: string
   private readonly __context: object
   private readonly __frame: object
 
-  public constructor (sparql: SparqlHttp, base: string, context: object, frame: object) {
+  public constructor (sparql: ParsingClient, base: string, context: object, frame: object) {
     log('Initialising SPARQL repository: %O', {
       base,
     })
-    this.__sparql = sparql
+    this.__sparql = sparql.query
     this.__base = base
     this.__context = context
     this.__frame = frame
@@ -51,8 +53,10 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       ...state,
     }
 
-    const selectRootGraph = await this.__sparql.selectQuery(
-      `BASE <${this.__base}>
+    let results: ResultRow[]
+    try {
+      results = await this.__sparql.select(
+        `BASE <${this.__base}>
       
       SELECT ?graph ?currentVersion
       WHERE { 
@@ -63,19 +67,17 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
           ?graph <urn:ddd:deleted> [] .
         }
       }`)
-    if (!selectRootGraph.ok) {
-      log('Failed to retrieve current state of aggregate %s. Server response %s', state['@id'], await selectRootGraph.text())
-      logResponse('Response was %d: %s', selectRootGraph.status, await selectRootGraph.text())
-      throw new Error(`Failed to read aggregate root: '${selectRootGraph.statusText}'`)
+    } catch (e) {
+      logError('Failed to read aggregate root: %o', e)
+      throw new Error('Failed to read aggregate root')
     }
-    const json = (await selectRootGraph.json())
 
-    if (json.results.bindings.length > 1) {
-      const graphUris = json.results.bindings.map(b => b.graph.value)
+    if (results.length > 1) {
+      const graphUris = results.map(b => b.graph.value)
       logError('Multiple graphs found for aggregate %s: %s', state['@id'], graphUris.join('\n'))
       throw new Error('Failed to save aggregate: Found multiple graphs')
-    } else if (json.results.bindings.length > 0) {
-      const [{ graph, currentVersion }] = json.results.bindings
+    } else if (results.length > 0) {
+      const [{ graph, currentVersion }] = results
       if (!currentVersion) {
         if (version > 1) {
           logError('Cannot save version %d. Previous version appears to have not number', version)
@@ -94,7 +96,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
 
     const parsed = await rdf.dataset().import(parserJsonld.import(stringToStream(JSON.stringify(jsonld)) as any))
 
-    const response = await this.__sparql.updateQuery(
+    await this.__sparql.update(
       `BASE <${this.__base}>
 
       DELETE WHERE
@@ -112,21 +114,20 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
         <${graphUri}> <urn:ddd:version> ${version} ;
                       <urn:ddd:id> <${id}> .
       }
-    `)
-
-    if (!response.ok) {
-      logError('Failed to save aggregate root: %s', response.statusText)
-      logResponse('Response was %d: %s', response.status, await response.text())
+    `).catch(e => {
+      logError('Failed to save aggregate root: %s', e.message)
       throw new Error('Failed to save aggregate root')
-    }
+    })
 
     log('Aggregate root saved')
   }
 
   public async load (id: string): Promise<AggregateRoot<S, any>> {
     log('Loading aggregate root %s', id)
-    const graph = await this.__sparql.constructQuery(
-      `BASE <${this.__base}>
+    let graph: Quad[]
+    try {
+      graph = await this.__sparql.construct(
+        `BASE <${this.__base}>
     
     CONSTRUCT { 
       ?s ?p ?o .
@@ -140,15 +141,13 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
       MINUS {
         ?root <urn:ddd:deleted> [] .
       }
-    }`) as any
-
-    if (!graph.ok) {
-      logError('Failed to load aggregate root: %s', graph.statusText)
-      logResponse('Response was %d: %s', graph.status, await graph.text())
+    }`)
+    } catch (e) {
+      logError('Failed to load aggregate root: %o', e)
       throw new Error('Failed to load aggregate root')
     }
 
-    const dataset = await rdf.dataset().import(await graph.quadStream())
+    const dataset = await rdf.dataset(graph)
     const jsonldArray: any[] = await fromRDF(dataset.toString()) as JsonLdArray
 
     const jsonld: any = await frame(jsonldArray, {
@@ -174,7 +173,7 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
 
   public async 'delete' (id: string): Promise<void> {
     log('Deleting aggregate root %s', id)
-    const response = await this.__sparql.updateQuery(
+    await this.__sparql.update(
       `BASE <${this.__base}>
       
       DELETE { 
@@ -190,13 +189,10 @@ export class SparqlGraphRepository<S extends Entity> implements Repository<S> {
           ?root <urn:ddd:deleted> ?isDeleted .
         }
       }
-    `)
-
-    if (!response.ok) {
-      logError('failed to delete: %s', response.statusText)
-      logResponse('Response was %d: %s', response.status, await response.text())
+    `).catch(e => {
+      logError('failed to delete: %o', e)
       throw new Error('Failed to load aggregate root')
-    }
+    })
 
     log('Deleted successfully')
   }
