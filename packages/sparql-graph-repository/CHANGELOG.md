@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.4.0...@tpluscode/fun-ddr-sparql-graph-repository@0.4.1) (2020-04-01)
+
+
+### Bug Fixes
+
+* incorrectly used json ld parser ([ba6a88a](https://github.com/tpluscode/fun-ddr/commit/ba6a88a6d20361caecc23b26ec7e46809765d08e))
+
+
+
+
+
 # [0.4.0](https://github.com/tpluscode/fun-ddr/compare/@tpluscode/fun-ddr-sparql-graph-repository@0.3.1...@tpluscode/fun-ddr-sparql-graph-repository@0.4.0) (2020-04-01)
 
 
